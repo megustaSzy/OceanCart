@@ -7,6 +7,8 @@ import { CartRepository } from '../repositories/CartRepository.js';
 import { WalletRepository } from '../repositories/WalletRepository.js';
 import { OrderRepository } from '../repositories/OrderRepository.js';
 import { StoreRepository } from '../repositories/StoreRepository.js';
+import { VoucherRepository } from '../repositories/VoucherRepository.js';
+import { ProductRepository } from '../repositories/ProductRepository.js';
 import { executeTransaction } from '../repositories/Transaction.js';
 
 export const OrderService = {
@@ -51,6 +53,16 @@ export const OrderService = {
                 // Clear Cart
                 await CartRepository.deleteItemsByCartId(cart.id, tx);
                 await CartRepository.deleteCart(cart.id, tx);
+
+                // Deduct Product Stock
+                for (const item of cart.items) {
+                    await ProductRepository.updateStock(item.productId, -item.quantity, tx);
+                }
+
+                // Deduct Voucher Usage
+                if (discount > 0 && voucherCode) {
+                    await VoucherRepository.decrementUsage(voucherCode, tx);
+                }
             });
         }
 
