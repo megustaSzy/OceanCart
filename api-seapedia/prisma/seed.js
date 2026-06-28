@@ -125,26 +125,6 @@ async function main() {
     })
   ]);
 
-  console.log('Seeding vouchers...');
-  await prisma.voucher.createMany({
-    data: [
-      {
-        code: 'SEGAR20',
-        discount: 20000,
-        remainingUsage: 100,
-        expiredAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
-      },
-      {
-        code: 'DISKON50K',
-        discount: 50000,
-        remainingUsage: 50,
-        expiredAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
-      }
-    ]
-  });
-
-
-
   console.log('Database seeded successfully!');
   console.log('===============================');
   console.log('Demo Accounts (Password: password123)');
