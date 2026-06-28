@@ -57,6 +57,19 @@ model User {
   addresses Address[]
   carts     Cart[]
   orders    Order[]   @relation("BuyerOrders")
+  tokens    Token[]
+  reviews   Review[]
+}
+
+model Token {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  refreshToken String   @unique
+  expiresAt    DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }
 
 model Role {
@@ -105,13 +118,18 @@ model Product {
 
   cartItems  CartItem[]
   orderItems OrderItem[]
+  reviews    Review[]
 }
 
 model Review {
-  id      Int    @id @default(autoincrement())
-  name    String
-  rating  Int
-  comment String
+  id        Int      @id @default(autoincrement())
+  productId Int
+  userId    Int
+  rating    Int
+  comment   String
+
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
