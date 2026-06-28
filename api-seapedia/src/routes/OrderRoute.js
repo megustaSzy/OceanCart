@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.use(protect);
 
+router.post('/check-voucher', requireRole('BUYER'), OrderController.checkVoucher);
 router.post('/checkout', requireRole('BUYER'), validate(OrderValidator.checkout), OrderController.checkout);
 router.get('/buyer', requireRole('BUYER'), OrderController.getBuyerOrders);
 router.get('/seller', requireRole('SELLER'), OrderController.getSellerOrders);

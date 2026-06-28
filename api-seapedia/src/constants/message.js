@@ -84,5 +84,8 @@ export const MESSAGE = {
     CREATED: "Ulasan berhasil dikirim",
     FETCHED: "Ulasan berhasil diambil",
     NOT_BOUGHT: "Anda hanya bisa memberi ulasan pada produk yang sudah dibeli",
+  },
+  VOUCHER: {
+    FETCHED: "Voucher berhasil diambil",
   }
 };

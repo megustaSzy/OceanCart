@@ -7,7 +7,7 @@ import { UserRepository, RoleRepository } from '../repositories/UserRepository.j
 import { TokenRepository } from '../repositories/TokenRepository.js';
 
 export const AuthService = {
-    async register({ name, username, email, password, roles }) {
+    async register({ name, username, email, password, roles, storeName, storeDescription }) {
         const existingUser = await UserRepository.findByEmailOrUsername(email, username);
 
         if (existingUser) {
@@ -20,14 +20,26 @@ export const AuthService = {
         const rolesData = await RoleRepository.findByNameIn(roles);
         const userRoles = rolesData.map(role => ({ roleId: role.id }));
 
-        const user = await UserRepository.create({
+        const userData = {
             name,
             username,
             email,
             password: hashedPassword,
+            activeRole: roles[0],
             roles: { create: userRoles },
             wallet: { create: { balance: 0 } }
-        });
+        };
+
+        if (roles.includes('SELLER') && storeName) {
+            userData.store = {
+                create: {
+                    storeName,
+                    description: storeDescription || ''
+                }
+            };
+        }
+
+        const user = await UserRepository.create(userData);
 
         const accessToken = AuthUtils.generateAccessToken(user.id);
         const refreshToken = AuthUtils.generateRefreshToken(user.id);

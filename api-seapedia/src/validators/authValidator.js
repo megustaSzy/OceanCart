@@ -6,7 +6,9 @@ export const AuthValidator = {
         username: z.string().min(3, "Username must be at least 3 characters"),
         email: z.string().email("Invalid email format"),
         password: z.string().min(6, "Password must be at least 6 characters"),
-        roles: z.array(z.string()).min(1, "At least one role is required")
+        roles: z.array(z.string()).min(1, "At least one role is required"),
+        storeName: z.string().optional(),
+        storeDescription: z.string().optional()
     }),
 
     login: z.object({
