@@ -3,6 +3,7 @@ import { ForbiddenError } from '../exceptions/ForbiddenError.js';
 import { NotFoundError } from '../exceptions/NotFoundError.js';
 import { MESSAGE } from '../constants/message.js';
 import { StoreRepository } from '../repositories/StoreRepository.js';
+import { OrderRepository } from '../repositories/OrderRepository.js';
 
 export const StoreService = {
     async create(sellerId, { storeName, description, logo }) {
@@ -46,5 +47,20 @@ export const StoreService = {
         }
 
         return await StoreRepository.delete(id);
+    },
+
+    async getRevenueReport(sellerId) {
+        const store = await StoreRepository.findBySellerId(sellerId);
+        if (!store) throw new NotFoundError(MESSAGE.STORE.NOT_FOUND);
+
+        const orders = await OrderRepository.findCompletedByStore(store.id);
+
+        const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.subtotal), 0);
+        
+        return {
+            storeName: store.storeName,
+            totalRevenue,
+            totalCompletedOrders: orders.length
+        };
     }
 };
