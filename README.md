@@ -1,8 +1,8 @@
-# 🐟 Seapedia - Multi Role Seafood Marketplace
+# 🐟 OceanCart - Multi Role Seafood Marketplace
 
-Seapedia adalah platform *marketplace* terpadu berskala besar yang dikhususkan untuk mempertemukan Nelayan/Penjual Hasil Laut, Pembeli, Kurir Pengiriman, dan Administrator dalam satu ekosistem digital yang mulus dan terintegrasi. 
+OceanCart adalah platform *marketplace* terpadu berskala besar yang dikhususkan untuk mempertemukan Nelayan/Penjual Hasil Laut, Pembeli, Kurir Pengiriman, dan Administrator dalam satu ekosistem digital yang mulus dan terintegrasi. 
 
-Dengan antarmuka yang menawan (*premium-looking UI*), arsitektur *backend* yang tangguh (*MVC pattern*), dan manajemen *state* yang *real-time*, Seapedia mendefinisikan ulang cara jual-beli hasil laut secara daring.
+Dengan antarmuka yang menawan (*premium-looking UI*), arsitektur *backend* yang tangguh (*MVC pattern*), dan manajemen *state* yang *real-time*, OceanCart mendefinisikan ulang cara jual-beli hasil laut secara daring.
 
 ---
 
@@ -38,7 +38,7 @@ Proyek ini dibangun menggunakan teknologi *modern web development* terbaru:
 2. **Dynamic Voucher & Promo System**
    *   `ADMIN` dapat melakukan CRUD Voucher lengkap dengan batasan limit penggunaan, deskripsi syarat, dan tanggal kadaluarsa.
    *   Sistem validasi voucher secara cerdas di sisi `BUYER` memotong harga seketika di *checkout*.
-3. **SeapediaPay (Internal E-Wallet)**
+3. **OceanCartPay (Internal E-Wallet)**
    *   Simulasi gerbang pembayaran internal. Pengguna dapat melakukan *Top Up*, melihat Riwayat Transaksi (*Income/Outcome*), dan memotong saldo saat *Checkout*.
 4. **Smart Cart & Real-Time Stock Management**
    *   *Cart* dilengkapi kontrol kuantitas interaktif. 
@@ -51,7 +51,7 @@ Proyek ini dibangun menggunakan teknologi *modern web development* terbaru:
 
 ## 🎨 User Experience (UX)
 
-Seapedia dirancang dengan pedoman UI/UX modern kelas premium:
+OceanCart dirancang dengan pedoman UI/UX modern kelas premium:
 *   **Glassmorphism & Soft Shadows:** Penggunaan transparansi dan bayangan memudar (*feathered shadows*) untuk memberikan ilusi *layering* yang dalam.
 *   **Interactive Micro-animations:** Semua tombol keranjang, input *quantity*, dan penambahan alamat memiliki transisi yang sangat halus, memastikan tidak ada lompatan antarmuka yang kasar.
 *   **Intuitive Feedback:** Modals, Toasts (React Hot Toast), dan indikator *loading* *(skeleton screens)* selalu hadir untuk membimbing interaksi pengguna.
@@ -61,7 +61,7 @@ Seapedia dirancang dengan pedoman UI/UX modern kelas premium:
 ## 🏛 Sistem Desain / Arsitektur
 
 ### **Backend: Clean MVC Architecture**
-API Seapedia menerapkan pola pemisahan logika tiga lapis:
+API OceanCart menerapkan pola pemisahan logika tiga lapis:
 1. **Controllers:** Hanya bertanggung jawab membaca *request*, memanggil layanan, dan mengembalikan format *response* yang standar.
 2. **Services:** Inti aplikasi. Seluruh aturan bisnis, kalkulasi harga, pemotongan pajak (PPN 11%), diskon, validasi dompet ada di sini.
 3. **Repositories:** Lapisan isolasi untuk seluruh perintah prisma (*query database*). Jika suatu saat database diganti, hanya bagian ini yang perlu diubah.
@@ -87,20 +87,20 @@ API Seapedia menerapkan pola pemisahan logika tiga lapis:
 
 ## 🚀 Cara Instalasi & Menjalankan Aplikasi
 
-Ikuti panduan berikut untuk menjalankan Seapedia di mesin lokal Anda. Pastikan Anda telah menginstal Node.js dan PostgreSQL.
+Ikuti panduan berikut untuk menjalankan OceanCart di mesin lokal Anda. Pastikan Anda telah menginstal Node.js dan PostgreSQL.
 
 ### **1. Setup Database & Backend**
-Buka terminal dan masuk ke folder `api-seapedia`:
+Buka terminal dan masuk ke folder `api-oceancart`:
 ```bash
-cd api-seapedia
+cd api-oceancart
 npm install
 ```
-Buat file `.env` di dalam folder `api-seapedia`:
+Buat file `.env` di dalam folder `api-oceancart`:
 ```env
 PORT=3001
-DATABASE_URL="postgresql://user:password@localhost:5432/seapedia?schema=public"
-JWT_SECRET="seapedia_rahasia_super_aman_123"
-JWT_REFRESH_SECRET="seapedia_refresh_sangat_aman_321"
+DATABASE_URL="postgresql://user:password@localhost:5432/oceancart?schema=public"
+JWT_SECRET="oceancart_rahasia_super_aman_123"
+JWT_REFRESH_SECRET="oceancart_refresh_sangat_aman_321"
 ```
 Migrasi struktur database dan isi data awal (*Seeding*):
 ```bash
@@ -111,9 +111,9 @@ npm run dev
 *(Server backend akan berjalan di `http://localhost:3001`)*
 
 ### **2. Setup Frontend**
-Buka terminal baru dan masuk ke folder `seapedia`:
+Buka terminal baru dan masuk ke folder `oceancart`:
 ```bash
-cd seapedia
+cd oceancart
 npm install
 npm run dev
 ```
@@ -124,9 +124,9 @@ npm run dev
 ## 📁 Struktur Proyek (Directory Tree)
 
 ```text
-seapedia_monorepo/
+oceancart_monorepo/
 │
-├── api-seapedia/                  # Backend Environment
+├── api-oceancart/                  # Backend Environment
 │   ├── prisma/                    # Skema Database & Seeder
 │   ├── src/
 │   │   ├── constants/             # Pesan response standar
@@ -141,7 +141,7 @@ seapedia_monorepo/
 │   │   └── index.js & server.js   # Server Entry Points
 │   └── package.json
 │
-└── seapedia/                      # Frontend Environment
+└── oceancart/                      # Frontend Environment
     ├── src/
     │   ├── assets/                # Gambar statis
     │   ├── components/            # Komponen UI Reusable (Modal, Navbar)
@@ -182,7 +182,7 @@ Setiap API memberikan format *response* seragam seperti ini:
 *   `GET /api/cart`: Melihat keranjang milik BUYER.
 *   `POST /api/cart`: Memasukkan produk ke keranjang.
 *   `PUT /api/cart/:id`: Memperbarui kuantitas produk dalam keranjang.
-*   `POST /api/orders/checkout`: Validasi SeapediaPay dan merubah keranjang menjadi Pesanan (Memotong Stok).
+*   `POST /api/orders/checkout`: Validasi OceanCartPay dan merubah keranjang menjadi Pesanan (Memotong Stok).
 
 ### **4. Admin & Vouchers**
 *   `GET /api/vouchers`: Mendapatkan voucher yang *valid* untuk di-klaim (*Public*).
