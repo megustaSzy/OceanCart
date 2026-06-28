@@ -61,6 +61,23 @@ export const OrderService = {
         return await OrderRepository.findByBuyerId(buyerId);
     },
 
+    async getOrderById(orderId, userId, role) {
+        const order = await OrderRepository.findById(orderId);
+        if (!order) throw new NotFoundError(MESSAGE.ORDER.NOT_FOUND);
+
+        // Security check
+        if (role === 'BUYER' && order.buyerId !== userId) {
+            throw new ForbiddenError(MESSAGE.COMMON.FORBIDDEN);
+        } else if (role === 'SELLER') {
+            const store = await StoreRepository.findBySellerId(userId);
+            if (!store || order.storeId !== store.id) {
+                throw new ForbiddenError(MESSAGE.COMMON.FORBIDDEN);
+            }
+        }
+        
+        return order;
+    },
+
     async getSellerOrders(sellerId) {
         const store = await StoreRepository.findBySellerId(sellerId);
         if (!store) throw new NotFoundError(MESSAGE.STORE.NOT_FOUND);
