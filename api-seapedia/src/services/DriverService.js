@@ -3,11 +3,12 @@ import { ForbiddenError } from '../exceptions/ForbiddenError.js';
 import { MESSAGE } from '../constants/message.js';
 import { DriverRepository } from '../repositories/DriverRepository.js';
 import { OrderRepository } from '../repositories/OrderRepository.js';
+import { WalletRepository } from '../repositories/WalletRepository.js';
 import { executeTransaction } from '../repositories/Transaction.js';
 
 export const DriverService = {
-    async getAvailableJobs() {
-        return await DriverRepository.findAvailableJobs();
+    async getJobs(driverId) {
+        return await DriverRepository.findJobs(driverId);
     },
 
     async takeJob(driverId, orderId) {
@@ -34,14 +35,40 @@ export const DriverService = {
             throw new ForbiddenError(MESSAGE.COMMON.FORBIDDEN);
         }
 
+        const order = await OrderRepository.findById(orderId);
+        
+        let driverWallet = await WalletRepository.findByUserId(driverId);
+        if (!driverWallet) driverWallet = await WalletRepository.create(driverId);
+        
+        let sellerWallet = await WalletRepository.findByUserId(order.store.sellerId);
+        if (!sellerWallet) sellerWallet = await WalletRepository.create(order.store.sellerId);
+
         return await executeTransaction(async (tx) => {
             await Promise.all([
                 OrderRepository.updateStatus(orderId, 'Pesanan_Selesai', undefined, tx),
                 OrderRepository.createHistory(orderId, 'Pesanan_Selesai', tx),
-                DriverRepository.updateJobStatus(orderId, 'Completed', tx)
+                DriverRepository.updateJobStatus(orderId, 'Completed', tx),
+
+                // Pay Driver
+                WalletRepository.incrementBalance(driverId, parseFloat(order.deliveryFee), tx),
+                WalletRepository.createTransaction({
+                    walletId: driverWallet.id,
+                    amount: parseFloat(order.deliveryFee),
+                    type: 'PAYMENT',
+                    description: `Delivery Fee for Order #${orderId}`
+                }, tx),
+
+                // Pay Seller
+                WalletRepository.incrementBalance(order.store.sellerId, parseFloat(order.subtotal), tx),
+                WalletRepository.createTransaction({
+                    walletId: sellerWallet.id,
+                    amount: parseFloat(order.subtotal),
+                    type: 'PAYMENT',
+                    description: `Product Revenue from Order #${orderId}`
+                }, tx)
             ]);
             
-            return { message: 'Job completed' };
+            return { message: MESSAGE.DRIVER.JOB_COMPLETED };
         });
     }
 };
