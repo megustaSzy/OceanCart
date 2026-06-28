@@ -53,9 +53,13 @@ export const AuthService = {
         await TokenRepository.create(user.id, refreshToken);
 
         return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            activeRole: user.activeRole,
+            roles: user.roles,
             accessToken,
             refreshToken,
-            roles: user.roles.map(r => r.role.name)
         };
     },
 
