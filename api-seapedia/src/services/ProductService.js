@@ -22,8 +22,19 @@ export const ProductService = {
         });
     },
 
-    async getAll() {
-        return await ProductRepository.findAll();
+    async getAll({ page = 1, limit = 8, search = '' } = {}) {
+        const skip = (page - 1) * limit;
+        const { items, total } = await ProductRepository.findAll({ skip, take: limit, search });
+        
+        return {
+            items,
+            meta: {
+                total,
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalPages: Math.ceil(total / limit)
+            }
+        };
     },
 
     async getById(id) {
