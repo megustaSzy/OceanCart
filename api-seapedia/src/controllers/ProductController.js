@@ -15,8 +15,10 @@ export const ProductController = {
 
     async getAll(req, res, next) {
         try {
-            const data = await ProductService.getAll();
-            return sendResponse(res, HttpStatus.OK, MESSAGE.PRODUCT.FETCHED, data);
+            const { page, limit, search } = req.query;
+            const data = await ProductService.getAll({ page, limit, search });
+            // Send paginated response
+            return sendResponse(res, HttpStatus.OK, MESSAGE.PRODUCT.FETCHED, data.items, data.meta);
         } catch (error) {
             next(error);
         }
