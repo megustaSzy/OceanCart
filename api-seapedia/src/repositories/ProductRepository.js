@@ -8,10 +8,26 @@ export const ProductRepository = {
         });
     },
 
-    async findAll() {
-        return await prisma.product.findMany({
-            include: { store: true }
-        });
+    async findAll({ skip = 0, take = 10, search = '' } = {}) {
+        const whereClause = search ? {
+            name: {
+                contains: search,
+                mode: 'insensitive'
+            }
+        } : {};
+
+        const [items, total] = await Promise.all([
+            prisma.product.findMany({
+                where: whereClause,
+                skip: parseInt(skip),
+                take: parseInt(take),
+                include: { store: true },
+                orderBy: { id: 'desc' }
+            }),
+            prisma.product.count({ where: whereClause })
+        ]);
+
+        return { items, total };
     },
 
     async create(data) {
