@@ -172,15 +172,38 @@ JWT_SECRET="oceancart_rahasia_super_aman_123"
 JWT_REFRESH_SECRET="oceancart_refresh_sangat_aman_321"
 ```
 
-Migrasi struktur database, isi data awal (*Seeding*), dan jalankan:
+Migrasi struktur database dan generate Prisma Client:
 
 ```bash
-npx prisma migrate dev
+npx prisma migrate dev --name init
+```
+
+Isi data awal (*Seeding*) untuk membuat akun demo dan produk contoh:
+
+```bash
 npx prisma db seed
+```
+
+Jalankan server backend:
+
+```bash
 npm run dev
 ```
 
 > Server backend akan berjalan di `http://localhost:3001`
+
+### 📋 Akun Demo (Setelah Seeding)
+
+Setelah menjalankan `npx prisma db seed`, akun-akun berikut akan tersedia untuk digunakan:
+
+| Role | Email | Password | Saldo Awal |
+|------|-------|----------|------------|
+| **Admin** | `admin@seapedia.com` | `password123` | Rp 0 |
+| **Buyer** | `buyer@seapedia.com` | `password123` | Rp 500.000 |
+| **Seller** | `seller@seapedia.com` | `password123` | Rp 100.000 |
+| **Driver** | `driver@seapedia.com` | `password123` | Rp 0 |
+
+> ⚠️ **Catatan:** Semua akun di atas menggunakan password yang sama yaitu `password123`. Akun Seller otomatis memiliki toko bernama **"Seafood Segar Bahari"** beserta 3 produk contoh (Salmon, Udang Windu, Cumi-Cumi).
 
 ### 3. Setup Frontend
 
