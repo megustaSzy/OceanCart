@@ -10,7 +10,7 @@ export default function DashboardOverview() {
   const { data: walletData } = useQuery({
     queryKey: ["wallet"],
     queryFn: () => api.get("/wallet"),
-    enabled: !!user,
+    enabled: !!user && user.activeRole !== 'ADMIN',
   });
 
   const { data: ordersData } = useQuery({
@@ -20,7 +20,7 @@ export default function DashboardOverview() {
       if (user?.activeRole === "DRIVER") return api.get("/driver/jobs");
       return api.get("/orders/buyer");
     },
-    enabled: !!user,
+    enabled: !!user && user.activeRole !== 'ADMIN',
   });
 
   const balance = walletData?.data?.balance || 0;
