@@ -11,7 +11,7 @@ const api = axios.create({
 
 // Response interceptor — unwrap data, handle token refresh
 api.interceptors.response.use(
-  (response) => response.data,
+  (response) => response.data as any, // Needs assertion to bypass Axios internal typing
   async (error) => {
     const originalRequest = error.config;
 
