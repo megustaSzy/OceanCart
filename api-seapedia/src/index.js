@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
+import { loggerMiddleware } from "./middlewares/loggerMiddleware.js";
 
 // Routes
 import AuthRoute from "./routes/AuthRoute.js";
@@ -29,6 +30,7 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(loggerMiddleware);
 
 // API Routes
 app.use("/api/auth", AuthRoute);
